@@ -1,0 +1,52 @@
+<html>
+<head>
+<title>ooooo</title>
+</head>
+<body>
+    <script type="text/javascript">
+        function getDataUri(url, callback) {
+            var image = new Image();
+
+            image.onload = function () {
+                var canvas = document.createElement('canvas');
+                canvas.width = this.naturalWidth; // or 'width' if you want a special/scaled size
+                canvas.height = this.naturalHeight; // or 'height' if you want a special/scaled size
+
+                canvas.getContext('2d').drawImage(this, 0, 0);
+
+                // Get raw image data
+                //callback(canvas.toDataURL('image/png').replace(/^data:image\/(png|jpg);base64,/, ''));
+
+                // ... or get as Data URI
+                callback(canvas.toDataURL('image/jpeg'));
+            };
+
+            image.src = url;
+            image.setAttribute('crossOrigin', 'anonymous');
+        }
+
+        // Usage
+        var img_src = "https://cdn1.edgedatg.com/aws/abc/brand/fall2018/abc-share-OG_170x170.jpg";
+        getDataUri(img_src, function(dataUri) {
+            var file = data2blob(dataUri);
+            
+            console.log(file);
+            var fmData = new FormData();
+            fmData.append("image", file);
+            console.log(fmData);
+        });
+
+        function data2blob(data){
+            data = data.split(',')[1];
+            data = window.atob(data);
+            var ia = new Uint8Array(data.length);
+            for (var i = 0; i < data.length; i++) {
+                ia[i] = data.charCodeAt(i);
+            };
+            return new Blob([ia], {type: 'image/jpeg'});
+        }
+//---------------------------------------------
+
+    </script>
+</body>
+</html>
